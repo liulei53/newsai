@@ -24,8 +24,9 @@ This project scrapes financial news, uses AI to analyze it, and generates action
 ```bash
 git clone https://github.com/your-username/financial-news-analysis.git
 cd financial-news-analysis
+```
 
-### 2. Create a .env file
+### 2. Create a .env file 
 
 Create a .env file in the root directory of the project and add the following environment variables:
 
@@ -91,21 +92,5 @@ License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-### 解释
 
-- **项目介绍**：概述了项目的功能和特点。
-- **安装说明**：详细列出了如何从 GitHub 克隆代码、配置环境变量、构建和启动 Docker 容器。
-- **API 使用**：提到使用了哪些外部 API，并提醒用户需要配置 API 密钥。
-- **目录结构**：简要描述了项目的目录结构，帮助用户快速理解文件组织。
-- **贡献指南**：如果有人想为项目贡献代码，提供了贡献的步骤。
-- **许可证**：提到项目的开源许可证，如果有的话。
-
-### 自定义
-
-你可以根据自己的需要对 `README.md` 进行修改：
-
-- 修改 API 的使用说明，以便其他开发者了解如何获取 API 密钥。
-- 根据实际情况更新项目的结构和功能描述。
-
-通过这个 `README.md`，其他开发者能够快速了解如何使用、运行、和贡献到你的项目！
 
