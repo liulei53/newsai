@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新闻分析</title>
+    <style>
+        /* 使用苹果官方字体 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9; /* 修改背景颜色 */
+            color: #333; /* 修改文字颜色 */
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 30px;
+            font-size: 2rem; /* 增大标题字体 */
+        }
+
+        /* 页面内容区 */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 每个新闻条目 */
+        .news-item {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 25px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 添加阴影 */
+        }
+
+        .timestamp {
+            font-size: 0.9em;
+            color: #888;
+            margin-top: 10px;
+        }
+
+        /* 设置利好和利空的颜色 */
+        .positive {
+            color: #e74c3c; /* 红色改为更加柔和的颜色 */
+        }
+
+        .negative {
+            color: #2ecc71; /* 绿色改为更加柔和的颜色 */
+        }
+
+        .no-companies {
+            color: #aaa;
+        }
+
+        /* 为了使新闻分析结果居中显示 */
+        .news-item h3 {
+            text-align: left;
+            font-size: 1.5rem; /* 增大标题字体 */
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* 提高段落和列表的间距 */
+        p, ul {
+            line-height: 1.8;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            .news-item {
+                padding: 15px;
+            }
+            .container {
+                padding: 0 10px;
+            }
+        }
+
+        /* 其他细节 */
+        .news-item:hover {
+            background-color: #f1f1f1;
+            transition: background-color 0.3s ease; /* 增加悬浮效果 */
+        }
+
+        /* 概念和公司名称列表的样式 */
+        .analysis-list {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+        }
+
+        .analysis-list li {
+            margin-bottom: 8px;
+        }
+
+        .analysis-list li span:first-child {
+            font-weight: bold;
+        }
+
+        /* 改善按钮样式 */
+        .button {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        /* 返回顶部按钮 */
+        #backToTop {
+            position: fixed;
+            bottom: 20px;
+            left: 320px; /* 设置按钮靠近内容的左侧 */
+            background-color: white;
+            color: rgb(111, 108, 108);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            display: none; /* 默认隐藏 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #backToTop:hover {
+            background-color: #d1d5da;
+        }
+        /* 新增部分：作者信息和免责声明样式 */
+        .info-container {
+            text-align: center;
+            margin-top: 50px;
+            background-color: #f7f7f7;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-container p {
+            margin: 5px 0;
+        }
+
+        .info-container .author {
+            font-size: 1.2rem;
+            color: #3498db;
+        }
+
+        .info-container .disclaimer {
+            font-size: 0.9rem;
+            color: #888;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <ul id="news-list">
+        <!-- 新闻内容将通过 JavaScript 动态加载 -->
+    </ul>
+
+    <script>
+        // 每隔3小时请求一次最新的新闻数据
+        function fetchLatestNews() {
+            fetch('/api/latest_news')
+                .then(response => response.json())
+                .then(data => {
+                    const newsList = document.getElementById('news-list');
+                    newsList.innerHTML = '';  // 清空当前列表
+
+                    data.forEach(news => {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `
+                            <h2>${news['新闻标题']}</h2>
+                            <p>${news['行业分析框架']}</p>
+                            <p>${JSON.stringify(news['相关上市公司'])}</p>
+                            <p>${JSON.stringify(news['相关概念板块'])}</p>
+                        `;
+                        newsList.appendChild(listItem);
+                    });
+                })
+                .catch(error => console.error('Error fetching latest news:', error));
+        }
+
+        // 页面加载时立即获取最新新闻
+        fetchLatestNews();
+
+        // 每3小时获取一次最新新闻
+        setInterval(fetchLatestNews, 3 * 60 * 60 * 1000);
+    </script>
+    <h1>AI分析财经新闻</h1>
+
+    <div class="container">
+        {% if news %}
+            {% for item in news %}
+                <div class="news-item">
+                    <h3>{{ item['新闻标题'] }}</h3>
+                    <p><strong>行业分析框架:</strong> {{ item['行业分析框架'] }}</p>
+
+                    <h4>概念板块:</h4>
+                        {% if item['相关概念板块'] %}
+                            <ul>
+                                {% for concept, analysis in item['相关概念板块'].items() %}
+                                    <li>
+                                        <span>{{ concept }}:</span>
+                                        <span class="{% if '利好' in analysis %}positive{% elif '利空' in analysis %}negative{% endif %}">
+                                            {{ analysis }}
+                                        </span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <span class="no-companies">暂无概念板块数据</span>
+                        {% endif %}
+                    </p>
+
+                    <h4>相关上市公司:</h4>
+                        {% if item['相关上市公司'] %}
+                            <ul>
+                                {% for company, analysis in item['相关上市公司'].items() %}
+                                    <li>
+                                        <span>{{ company }}:</span>
+                                        <span class="{% if '利好' in analysis %}positive{% elif '利空' in analysis %}negative{% endif %}">
+                                            {{ analysis }}
+                                        </span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                    {% else %}
+                        <p class="no-companies">暂无相关上市公司数据</p>
+                    {% endif %}
+
+                    <p class="timestamp"><strong>分析时间:</strong> {{ item['timestamp'] }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>没有最新的新闻数据。</p>
+        {% endif %}
+    </div>
+    <!-- 新增：作者信息和免责声明 -->
+    <div class="info-container">
+        <p>作者: <a href="https://x.com/Bob_Dreamer" target="_blank">Bob_Dreamer</a></p>
+        <p class="disclaimer">免责声明: 此项目仅用于技术交流，不构成投资建议。</p>
+    </div>
+     <!-- 返回顶部按钮 -->
+     <button id="backToTop" onclick="scrollToTop()">返回顶部</button>
+
+     <script>
+         // 获取按钮元素
+         const backToTopButton = document.getElementById('backToTop');
+ 
+         // 页面滚动事件，判断何时显示"返回顶部"按钮
+         window.onscroll = function() {
+             if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                 backToTopButton.style.display = "block"; // 显示按钮
+             } else {
+                 backToTopButton.style.display = "none"; // 隐藏按钮
+             }
+         };
+ 
+         // 返回顶部函数
+         function scrollToTop() {
+             window.scrollTo({ top: 0, behavior: 'smooth' });
+         }
+     </script>
+
+
+
+</body>
+</html>

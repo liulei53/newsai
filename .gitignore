@@ -1,0 +1,11 @@
+# .env file
+.env
+
+# Other common files to ignore
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.db
+node_modules/
+*.log
