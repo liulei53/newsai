@@ -144,30 +144,7 @@
         #backToTop:hover {
             background-color: #d1d5da;
         }
-        /* 新增部分：作者信息和免责声明样式 */
-        .info-container {
-            text-align: center;
-            margin-top: 50px;
-            background-color: #f7f7f7;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
 
-        .info-container p {
-            margin: 5px 0;
-        }
-
-        .info-container .author {
-            font-size: 1.2rem;
-            color: #3498db;
-        }
-
-        .info-container .disclaimer {
-            font-size: 0.9rem;
-            color: #888;
-            margin-top: 15px;
-        }
     </style>
 </head>
 <body>
@@ -183,7 +160,7 @@
                 .then(data => {
                     const newsList = document.getElementById('news-list');
                     newsList.innerHTML = '';  // 清空当前列表
-
+    
                     data.forEach(news => {
                         const listItem = document.createElement('li');
                         listItem.innerHTML = `
@@ -197,25 +174,27 @@
                 })
                 .catch(error => console.error('Error fetching latest news:', error));
         }
-
+    
         // 页面加载时立即获取最新新闻
         fetchLatestNews();
-
+    
         // 每3小时获取一次最新新闻
         setInterval(fetchLatestNews, 3 * 60 * 60 * 1000);
     </script>
+    
     <h1>AI分析财经新闻</h1>
-
+    
     <div class="container">
         {% if news %}
             {% for item in news %}
                 <div class="news-item">
                     <h3>{{ item['新闻标题'] }}</h3>
                     <p><strong>行业分析框架:</strong> {{ item['行业分析框架'] }}</p>
-
+    
                     <h4>概念板块:</h4>
-                        {% if item['相关概念板块'] %}
-                            <ul>
+                    {% if item['相关概念板块'] %}
+                        <ul>
+                            {% if item['相关概念板块'] is mapping %}  <!-- 判断是否为字典 -->
                                 {% for concept, analysis in item['相关概念板块'].items() %}
                                     <li>
                                         <span>{{ concept }}:</span>
@@ -224,15 +203,18 @@
                                         </span>
                                     </li>
                                 {% endfor %}
-                            </ul>
-                        {% else %}
-                            <span class="no-companies">暂无概念板块数据</span>
-                        {% endif %}
-                    </p>
-
+                            {% else %}
+                                <li>暂无概念板块数据</li>  <!-- 如果是列表，直接提示 -->
+                            {% endif %}
+                        </ul>
+                    {% else %}
+                        <span class="no-companies">暂无概念板块数据</span>
+                    {% endif %}
+    
                     <h4>相关上市公司:</h4>
-                        {% if item['相关上市公司'] %}
-                            <ul>
+                    {% if item['相关上市公司'] %}
+                        <ul>
+                            {% if item['相关上市公司'] is mapping %}  <!-- 判断是否为字典 -->
                                 {% for company, analysis in item['相关上市公司'].items() %}
                                     <li>
                                         <span>{{ company }}:</span>
@@ -241,22 +223,20 @@
                                         </span>
                                     </li>
                                 {% endfor %}
-                            </ul>
+                            {% else %}
+                                <li>暂无相关上市公司数据</li>  <!-- 如果是列表，直接提示 -->
+                            {% endif %}
+                        </ul>
                     {% else %}
                         <p class="no-companies">暂无相关上市公司数据</p>
                     {% endif %}
-
+    
                     <p class="timestamp"><strong>分析时间:</strong> {{ item['timestamp'] }}</p>
                 </div>
             {% endfor %}
         {% else %}
             <p>没有最新的新闻数据。</p>
         {% endif %}
-    </div>
-    <!-- 新增：作者信息和免责声明 -->
-    <div class="info-container">
-        <p>作者: <a href="https://x.com/Bob_Dreamer" target="_blank">Bob_Dreamer</a></p>
-        <p class="disclaimer">免责声明: 此项目仅用于技术交流，不构成投资建议。</p>
     </div>
      <!-- 返回顶部按钮 -->
      <button id="backToTop" onclick="scrollToTop()">返回顶部</button>
