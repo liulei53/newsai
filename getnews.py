@@ -180,6 +180,9 @@ def main():
     print("-------------------")
     # 把文本字符转成python字典
     data = json.loads(analysis_result)
+    # 确保 data 是列表格式
+    if isinstance(data, dict):
+        data = [data]  # 如果是单条数据，转换成列表
     print(data)
     # 把数据存入数据     
     store_news_analysis(data)   
